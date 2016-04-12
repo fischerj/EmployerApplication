@@ -1,0 +1,9 @@
+C:\Users\jfischer\documents\visual studio 2015\Projects\EmployerApplication\BusinessObjects\bin\Debug\BusinessObjects.dll
+C:\Users\jfischer\documents\visual studio 2015\Projects\EmployerApplication\BusinessObjects\bin\Debug\BusinessObjects.pdb
+C:\Users\jfischer\documents\visual studio 2015\Projects\EmployerApplication\BusinessObjects\bin\Debug\DatabaseHelper.dll
+C:\Users\jfischer\documents\visual studio 2015\Projects\EmployerApplication\BusinessObjects\bin\Debug\ConfigurationHelper.dll
+C:\Users\jfischer\documents\visual studio 2015\Projects\EmployerApplication\BusinessObjects\bin\Debug\DatabaseHelper.pdb
+C:\Users\jfischer\documents\visual studio 2015\Projects\EmployerApplication\BusinessObjects\bin\Debug\ConfigurationHelper.pdb
+C:\Users\jfischer\documents\visual studio 2015\Projects\EmployerApplication\BusinessObjects\obj\Debug\BusinessObjects.csprojResolveAssemblyReference.cache
+C:\Users\jfischer\documents\visual studio 2015\Projects\EmployerApplication\BusinessObjects\obj\Debug\BusinessObjects.dll
+C:\Users\jfischer\documents\visual studio 2015\Projects\EmployerApplication\BusinessObjects\obj\Debug\BusinessObjects.pdb

@@ -1,0 +1,4 @@
+c:\users\jfischer\documents\visual studio 2015\Projects\EmployerApplication\ConfigurationHelper\bin\Debug\ConfigurationHelper.dll
+c:\users\jfischer\documents\visual studio 2015\Projects\EmployerApplication\ConfigurationHelper\bin\Debug\ConfigurationHelper.pdb
+c:\users\jfischer\documents\visual studio 2015\Projects\EmployerApplication\ConfigurationHelper\obj\Debug\ConfigurationHelper.dll
+c:\users\jfischer\documents\visual studio 2015\Projects\EmployerApplication\ConfigurationHelper\obj\Debug\ConfigurationHelper.pdb
