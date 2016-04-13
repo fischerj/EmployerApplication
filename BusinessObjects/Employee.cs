@@ -13,44 +13,54 @@ namespace BusinessObjects
         #region Private Members
         private string _Firstname = string.Empty;
         private string _Lastname = string.Empty;
+        private EmployeePhoneList _Phones = null;
         #endregion
 
         #region Public Properties
-        public string Firstname
+        public EmployeePhoneList Phones
         {
             get
             {
-                return _Firstname;
+                //LAZY LOADING
+                if (_Phones==null)
+                { 
+                    _Phones = new EmployeePhoneList();
+                    _Phones = Phones.GetByEmployeId(base.Id); 
+                }
+                return _Phones;
             }
+        }
+
+        public string Firstname
+        {
+            get {return _Firstname; }
             set
             {
-                if (_Firstname != value)
+                if (_Firstname !=value)
                 {
                     _Firstname = value;
                     base.IsDirty = true;
-                    bool Savable = IsSavable();
-                    SavableEventArgs e = new SavableEventArgs(Savable);
+                    bool Saveable = IsSavable();
+                    SavableEventArgs e = new SavableEventArgs(Saveable);
                     RaiseEvent(e);
-     
                 }
+                
             }
         }
         public string Lastname
         {
-            get
-            {
-                return _Lastname;
-            }
+            get { return _Lastname; }
             set
             {
                 if (_Lastname != value)
                 {
                     _Lastname = value;
                     base.IsDirty = true;
-                    bool Savable = IsSavable();
-                    SavableEventArgs e = new SavableEventArgs(Savable);
+                    bool Saveable = IsSavable();
+                    SavableEventArgs e = new SavableEventArgs(Saveable);
                     RaiseEvent(e);
                 }
+
             }
         }
         #endregion
@@ -68,7 +78,7 @@ namespace BusinessObjects
                 database.Command.Parameters.Add("@LastName", SqlDbType.VarChar).Value = _Lastname;
                 //PROVIDES THE EMPTY BUCKETS
                 base.Initialize(database, Guid.Empty);
-                database.ExecuteJQuery();
+                database.ExecuteNonQueryWithTransaction();
                 //UNLOADS THE FULL BUCKETS INTO THE OBJECT
                 base.Initialize(database.Command);
             }
@@ -92,7 +102,7 @@ namespace BusinessObjects
                 database.Command.Parameters.Add("@LastName", SqlDbType.VarChar).Value = _Lastname;
                 //PROVIDES THE EMPTY BUCKETS
                 base.Initialize(database, base.Id);
-                database.ExecuteJQuery();
+                database.ExecuteNonQueryWithTransaction();
                 //UNLOADS THE FULL BUCKETS INTO THE OBJECT
                 base.Initialize(database.Command);
             }
@@ -115,7 +125,7 @@ namespace BusinessObjects
                 database.Command.CommandText = "tblEmployeeDELETE";
                 //PROVIDES THE EMPTY BUCKETS
                 base.Initialize(database, base.Id);
-                database.ExecuteJQuery();
+                database.ExecuteNonQueryWithTransaction();
                 //UNLOADS THE FULL BUCKETS INTO THE OBJECT
                 base.Initialize(database.Command);
             }
@@ -157,7 +167,7 @@ namespace BusinessObjects
         #endregion
 
         #region  Public Methods 
-        private Employee GetById(Guid id)
+        public Employee GetById(Guid id)
         {
 
             Database database = new Database("Employer");
@@ -197,6 +207,8 @@ namespace BusinessObjects
         {
             bool result = true;
             Database database = new Database("Employer");
+            database.BeginTransaction();
+
             if (base.IsNew == true && IsSavable() == true)
             {
                 result = Insert(database);
@@ -214,6 +226,23 @@ namespace BusinessObjects
             {
                 base.IsDirty = false;
                 base.IsNew = false;
+            }
+
+            //SAVE THE CHILDREN
+            if (result==true && _Phones!=null && _Phones.IsSavable()==true)
+            {
+                result = Phones.Save(database);
+            }
+
+
+
+            if (result==true)
+            {
+                database.EndTransaction();
+            }
+            else
+            {
+                database.RollBack();
             }
             return this;
 

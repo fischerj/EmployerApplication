@@ -8,63 +8,24 @@ using System.Data;
 
 namespace BusinessObjects
 {
-    public class EmployeePhone : HeaderData
+    public class PhoneType : HeaderData
     {
         #region Private Members
-        private Guid _EmployeeId = Guid.Empty;
-        private string _Phone = string.Empty;
-        private Guid _PhoneTypeId = Guid.Empty;
-
+        private string _Type = string.Empty;
         #endregion
 
         #region Public Properties
-        public Guid EmployeeId
+        public string Type
         {
             get
             {
-                return _EmployeeId;
+                return _Type;
             }
             set
             {
-                if (_EmployeeId != value)
+                if (_Type !=value)
                 {
-                    _EmployeeId = value;
-                    base.IsDirty = true;
-                    bool Savable = IsSavable();
-                    SavableEventArgs e = new SavableEventArgs(Savable);
-                    RaiseEvent(e);
-                }
-            }
-        }
-        public string Phone
-        {
-            get
-            {
-                return _Phone;
-            }
-            set
-            {
-                if (_Phone != value)
-                {
-                    _Phone = value;
-                    base.IsDirty = true;
-                    bool Savable = IsSavable();
-                    SavableEventArgs e = new SavableEventArgs(Savable);
-                    RaiseEvent(e);
-                }
-            }
-        }
-        public Guid PhoneTypeId
-        {
-            get
-            {
-                return _PhoneTypeId;
-            }
-            set
-            {
-                if (_PhoneTypeId != value)
-                {
-                    _PhoneTypeId = value;
+                    _Type = value;
                     base.IsDirty = true;
                     bool Savable = IsSavable();
                     SavableEventArgs e = new SavableEventArgs(Savable);
@@ -82,13 +43,11 @@ namespace BusinessObjects
             {
                 database.Command.Parameters.Clear();
                 database.Command.CommandType = System.Data.CommandType.StoredProcedure;
-                database.Command.CommandText = "tblEmployeePhoneINSERT";
-                database.Command.Parameters.Add("@EmployeeId", SqlDbType.UniqueIdentifier).Value = _EmployeeId;
-                database.Command.Parameters.Add("@Phone", SqlDbType.VarChar).Value = _Phone;
-                database.Command.Parameters.Add("@PhoneTypeId", SqlDbType.UniqueIdentifier).Value = _PhoneTypeId;
+                database.Command.CommandText = "tblPhoneTypeINSERT";
+                database.Command.Parameters.Add("@Type", SqlDbType.VarChar).Value = _Type;
                 //PROVIDES THE EMPTY BUCKETS
                 base.Initialize(database, Guid.Empty);
-                database.ExecuteNonQueryWithTransaction();
+                database.ExecuteJQuery();
                 //UNLOADS THE FULL BUCKETS INTO THE OBJECT
                 base.Initialize(database.Command);
             }
@@ -107,13 +66,11 @@ namespace BusinessObjects
             {
                 database.Command.Parameters.Clear();
                 database.Command.CommandType = System.Data.CommandType.StoredProcedure;
-                database.Command.CommandText = "tblEmployeePhoneUPDATE";
-                database.Command.Parameters.Add("@EmployeeId", SqlDbType.UniqueIdentifier).Value = _EmployeeId;
-                database.Command.Parameters.Add("@Phone", SqlDbType.VarChar).Value = _Phone;
-                database.Command.Parameters.Add("@PhoneTypeId", SqlDbType.UniqueIdentifier).Value = _PhoneTypeId;
+                database.Command.CommandText = "tblPhoneTypeUPDATE";
+                database.Command.Parameters.Add("@Type", SqlDbType.VarChar).Value = _Type;
                 //PROVIDES THE EMPTY BUCKETS
                 base.Initialize(database, base.Id);
-                database.ExecuteNonQueryWithTransaction();
+                database.ExecuteJQuery();
                 //UNLOADS THE FULL BUCKETS INTO THE OBJECT
                 base.Initialize(database.Command);
             }
@@ -133,10 +90,10 @@ namespace BusinessObjects
             {
                 database.Command.Parameters.Clear();
                 database.Command.CommandType = System.Data.CommandType.StoredProcedure;
-                database.Command.CommandText = "tblEmployeePhoneDELETE";
+                database.Command.CommandText = "tblPhoneTypeDELETE";
                 //PROVIDES THE EMPTY BUCKETS
                 base.Initialize(database, base.Id);
-                database.ExecuteNonQueryWithTransaction();
+                database.ExecuteJQuery();
                 //UNLOADS THE FULL BUCKETS INTO THE OBJECT
                 base.Initialize(database.Command);
             }
@@ -153,19 +110,13 @@ namespace BusinessObjects
         {
             bool result = true;
 
-            //INTENTIONALLY LEAVING OUT EMPLOYEEID
-
-            if (_Phone == null || _Phone.Trim() == string.Empty)
+            if (_Type == null || _Type.Trim() == string.Empty)
             {
                 result = false;
             }
 
-            if (_Phone == null || _Phone.Length > 20)
-            {
-                result = false;
-            }
 
-            if (_PhoneTypeId == null || _PhoneTypeId != Guid.Empty)
+            if (_Type == null || _Type.Length > 20)
             {
                 result = false;
             }
@@ -175,13 +126,13 @@ namespace BusinessObjects
         #endregion
 
         #region  Public Methods 
-        public EmployeePhone GetById(Guid id)
+        public PhoneType GetById(Guid id)
         {
 
             Database database = new Database("Employer");
             DataTable dt = new DataTable();
             database.Command.CommandType = CommandType.StoredProcedure;
-            database.Command.CommandText = "tblEmployeePhoneGetById";
+            database.Command.CommandText = "tblPhoneTypeGetById";
             base.Initialize(database, base.Id);
             dt = database.ExecuteQuery();
             if (dt != null && dt.Rows.Count == 1)
@@ -197,9 +148,7 @@ namespace BusinessObjects
 
         public void InitializeBusinessData(DataRow dr)
         {
-            _EmployeeId = (Guid) dr["EmployeeId"];
-            _Phone = dr["Phone"].ToString();
-            _PhoneTypeId = (Guid) dr["PhoneTypeId"];
+            _Type = dr["Type"].ToString();
         }
 
         public bool IsSavable()
@@ -212,10 +161,12 @@ namespace BusinessObjects
             return result;
         }
 
-        public EmployeePhone Save(Database database)
+        public PhoneType Save()
         {
             bool result = true;
-            //Database database = new Database("Employer");
+            Database database = new Database("Employer");
+            database.BeginTransaction();
+
             if (base.IsNew == true && IsSavable() == true)
             {
                 result = Insert(database);
@@ -235,8 +186,6 @@ namespace BusinessObjects
                 base.IsNew = false;
             }
             return this;
-
-
         }
         #endregion
 
@@ -249,7 +198,7 @@ namespace BusinessObjects
         #endregion
 
         #region Construction 
-        public EmployeePhone()
+        public PhoneType()
         {
 
         }

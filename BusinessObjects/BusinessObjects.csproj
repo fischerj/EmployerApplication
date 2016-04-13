@@ -43,8 +43,11 @@
     <Compile Include="Employee.cs" />
     <Compile Include="EmployeeList.cs" />
     <Compile Include="EmployeePhone.cs" />
+    <Compile Include="EmployeePhoneList.cs" />
     <Compile Include="Event.cs" />
     <Compile Include="HeaderData.cs" />
+    <Compile Include="PhoneType.cs" />
+    <Compile Include="PhoneTypeList.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SavableEventArgs.cs" />
   </ItemGroup>
